@@ -9,19 +9,25 @@ import dotenv from "dotenv";
 import sqlite3 from "sqlite3";
 import nodemailer from "nodemailer";
 
-dotenv.config();
+dotenv.config({
+  path: path.join(process.cwd(), ".env")
+});
 
+console.log("ENV CHECK");
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
+console.log("EMAIL_TO:", process.env.EMAIL_TO);
 // =======================
 // Email Configuration
 // =======================
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: false,
+  tls: {
+    rejectUnauthorized: false
+  }
 });
-
 
 
 const app = express();
@@ -33,20 +39,20 @@ const server = http.createServer(app);
 // =======================
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: "http://192.168.5.116",
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
+app.use((req, res, next) => {
+  console.log("Origin:", req.headers.origin);
+  console.log("Method:", req.method);
+  console.log("URL:", req.url);
+  next();
+});
 
+app.use(cors());
 // =======================
 // Socket.IO
 // =======================
 const io = new Server(server, {
   cors: {
-    origin: "http://192.168.5.116",
+    origin: "http://192.168.29.15",
     methods: ["GET", "POST"],
   },
 });
@@ -165,13 +171,33 @@ app.post("/contact", async (req, res) => {
           });
         }
 
+await transporter.sendMail({
+  from: process.env.EMAIL_FROM,
+  to: process.env.EMAIL_TO,
+  replyTo: email,
+  subject: "New Contact Form Submission",
+  html: `
+    <h2>New Contact Request</h2>
+    <p><b>Name:</b> ${name}</p>
+    <p><b>Email:</b> ${email}</p>
+    <p><b>Message:</b> ${message}</p>
+  `,
+});
+
+
+
+
         try {
+
+
+
           // Send email to Admin
           await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: process.env.EMAIL_TO,
-            subject: "New Contact Form Submission",
-            html: `
+           from: process.env.EMAIL_FROM,
+  to: process.env.EMAIL_TO,
+  replyTo: email,
+  subject: "New Contact Form Submission",
+  html: `
               <h2>New Contact Form Submission</h2>
 
               <p><strong>Name:</strong> ${name}</p>
@@ -285,10 +311,12 @@ app.get("/test", (req, res) => {
 // =======================
 // Static Frontend
 // =======================
-app.use(express.static(path.join(process.cwd(), "public")));
+const distPath = path.join(process.cwd(), "..", "dist");
+
+app.use(express.static(distPath));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "public", "index.html"));
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
 // =======================
