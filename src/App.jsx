@@ -15,7 +15,7 @@ import { io } from "socket.io-client";
 
 function App() {
   useEffect(() => {
-    const socket = io("http://localhost:3000");
+    const socket = io();
 
     // Emit visitor info on page load
     socket.emit("new-visitor", {

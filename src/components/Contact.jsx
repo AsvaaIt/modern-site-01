@@ -23,7 +23,7 @@ export default function Contact() {
 
     try {
       const response = await fetch(
-                         "http://192.168.5.116:3000/contact",
+                         "/contact",
         {
           method: "POST",
           headers: {
