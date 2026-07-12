@@ -1,0 +1,44 @@
+.contact-section {
+  padding: 80px 20px;
+  background-color: #f8f9fb; /* light gray background */
+  color: #0b0c10; /* dark text color */
+  text-align: center;
+}
+
+.contact-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #0b0c10; /* ensure header is dark */
+}
+
+.contact-section p {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  color: #333; /* dark paragraph text */
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  color: #0b0c10; /* dark input text */
+}
+
+.contact-form button {
+  width: 100%;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.contact-form button:hover {
+  background: #0056b3;
+}

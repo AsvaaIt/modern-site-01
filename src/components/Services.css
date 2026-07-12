@@ -1,0 +1,70 @@
+.services {
+  padding: 100px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.section-title {
+  font-size: 2.2rem;
+
+  /* Gradient text with cross-browser compatibility */
+  background: linear-gradient(45deg, #00d9ff, #a86af9);
+  background-clip: text;           
+  -webkit-background-clip: text;   
+  color: transparent;              
+  -webkit-text-fill-color: transparent; 
+  margin-bottom: 50px;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  justify-items: center;
+}
+
+.service-card {
+  position: relative;
+  width: 90%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+.service-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 10px 35px rgba(168, 106, 249, 0.5);
+}
+
+.service-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.service-card:hover .service-img {
+  opacity: 1;
+}
+
+.service-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+}
+
+.service-info h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+html {
+  scroll-behavior: smooth;
+}

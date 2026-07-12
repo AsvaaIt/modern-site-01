@@ -1,0 +1,40 @@
+.about {
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.about-text {
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.8;
+  color: #ccc;
+}
+
+.about h2 {
+  font-size: 2rem;
+
+  /* Gradient heading */
+  background: linear-gradient(45deg, #00d9ff, #a86af9);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+.about p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 15px;
+  animation: floatText 2s ease-in-out infinite alternate;
+}
+
+@keyframes floatText {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
