@@ -19,7 +19,7 @@ const Services = () => {
       targetId: "web-dev",
     },
     {
-      title: "IT Infracture Support and Services",
+      title: "IT infrastructure Support and Services",
       img: cloudImg,
       targetId: "cloud",
     },

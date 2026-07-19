@@ -1,3 +1,4 @@
+/* --- Base Styles (Desktop & Wide Screens) --- */
 .service-detail {
   padding: 80px 20px;
   display: flex;
@@ -5,30 +6,39 @@
   align-items: center;
   background: #0a0a0a;
   color: #fff;
+  overflow: hidden; /* Prevents horizontal scroll from animations */
 }
 
 .detail-container {
-  max-width: 1000px;
+  max-width: 1100px;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Allows image and text to sit side-by-side on desktop */
   align-items: center;
+  justify-content: space-between; /* Spreads out the image and text */
   gap: 40px;
 }
 
+/* --- Floating Image Styles --- */
 .detail-img {
   flex: 1 1 400px;
   max-width: 450px;
+  width: 100%; /* Ensures it scales correctly */
+  height: auto;
   border-radius: 20px;
   object-fit: cover;
   box-shadow: 0 10px 35px rgba(168, 106, 249, 0.4);
+  /* Applied your floating animation directly to the image */
+  animation: floatImage 6s ease-in-out infinite; 
 }
 
+/* --- Text Styles --- */
 .detail-text {
-  flex: 1 1 400px;
+  flex: 1 1 450px;
 }
 
 .detail-text h2 {
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin-bottom: 20px;
   background: linear-gradient(45deg, #00d9ff, #a86af9);
   background-clip: text;
@@ -39,23 +49,58 @@
 
 .detail-text p {
   font-size: 1.1rem;
-  line-height: 1.6;
+  line-height: 1.7;
+  color: #e0e0e0; /* Slightly softened white for better readability */
 }
+
+/* --- Smooth Floating Animation --- */
+/* Simplified your keyframes slightly for a buttery-smooth loop */
+@keyframes floatImage {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
 html {
   scroll-behavior: smooth;
 }
- 
-.service-image {
-  width: 250px;
-  height: auto;
-  animation: floatImage 6s ease-in-out infinite alternate;
+
+/* --- Mobile and Tablet Responsiveness --- */
+@media (max-width: 900px) {
+  .detail-container {
+    justify-content: center;
+    text-align: center; /* Centers the text when stacked on smaller screens */
+  }
+
+  .detail-text {
+    /* Ensures text is centered correctly in flex layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+  }
 }
 
-/* Floating animation */
-@keyframes floatImage {
-  0% { transform: translateY(0px); }
-  25% { transform: translateY(-10px); }
-  50% { transform: translateY(5px); }
-  75% { transform: translateY(-5px); }
-  100% { transform: translateY(0px); }
+@media (max-width: 768px) {
+  .service-detail {
+    padding: 60px 15px;
+  }
+  
+  .detail-container {
+    flex-direction: column; /* Force a vertical stack on mobile */
+    gap: 30px;
+  }
+
+  .detail-text h2 {
+    font-size: 1.8rem;
+  }
+
+  .detail-text p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .detail-img {
+    max-width: 90%; /* Prevents the image from touching the screen edges */
+    animation-duration: 8s; /* Slows down the float slightly on mobile so it isn't distracting */
+  }
 }
