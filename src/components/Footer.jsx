@@ -1,8 +1,8 @@
 import React from "react";
 import "../components/Footer.css";
 
-
-import { FaLinkedin, FaTwitter } from "react-icons/fa";
+// 1. Added FaFacebook to the import list
+import { FaLinkedin, FaTwitter, FaFacebook } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -26,6 +26,16 @@ export default function Footer() {
           style={styles.iconLink}
         >
           <FaTwitter size={24} />
+        </a>
+
+        {/* 2. Added Facebook Icon Link */}
+        <a
+          href="https://www.facebook.com/profile.php?id=61591723096685" 
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.iconLink}
+        >
+          <FaFacebook size={24} />
         </a>
       </div>
     </footer>

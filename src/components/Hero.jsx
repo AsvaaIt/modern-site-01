@@ -2,7 +2,7 @@ import React from "react";
 import "../components/Hero.css";
 
 import heroDesktop from "../assets/hero-desktop.png";
-import heroMobile from "../assets/hero-mobile.png";
+import heroMobile from "../assets/hero-desktop.png";
 
 const Hero = () => {
   const handleExplore = () => {

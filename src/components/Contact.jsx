@@ -22,16 +22,13 @@ export default function Contact() {
     setStatus("Sending...");
 
     try {
-      const response = await fetch(
-                         "/api/contact",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       const data = await response.json();
 
@@ -58,7 +55,11 @@ export default function Contact() {
       <h2>Contact Us</h2>
       <p>Fill out the form or reach us at info@asvaa-it.in</p>
 
-      <form onSubmit={handleSubmit}>
+      {/* Added flex column layout here to force everything to stack vertically */}
+      <form 
+        onSubmit={handleSubmit} 
+        style={{ display: "flex", flexDirection: "column", gap: "15px", maxWidth: "500px", margin: "0 auto" }}
+      >
         <input
           type="text"
           name="name"
@@ -82,10 +83,16 @@ export default function Contact() {
           placeholder="Your Message"
           value={formData.message}
           onChange={handleChange}
+          rows="5"
           required
         />
 
-        <button type="submit">Send</button>
+        {/* Wrapped the button in a div to ensure it stays on its own line */}
+        <div style={{ marginTop: "10px", textAlign: "center" }}>
+          <button type="submit" style={{ padding: "10px 30px", cursor: "pointer" }}>
+            Send
+          </button>
+        </div>
       </form>
 
       {status && (

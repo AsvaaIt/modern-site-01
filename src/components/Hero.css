@@ -1,17 +1,45 @@
 
 
 .hero {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+ position: relative;
+ width: 90%;
+ margin: 0 auto; /* Added to center the container on the page */
+ min-height: 90vh;
+ background-size: cover;
+ background-position: center center;
+ background-repeat: no-repeat;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+ display: flex;
+ flex-direction: column; /* Updated to stack children vertically */
+ justify-content: center; /* This will center the whole stack vertically */
+ align-items: center; /* This centers children horizontally */
+ overflow: hidden;
+}
+
+/* Updated explore button for better positioning with space */
+.explore-btn {
+ /* Pushes the button to the bottom of the vertical stack */
+ margin-top: auto;
+ 
+ /* Add a large top margin or padding for separation from main content */
+ /* Alternatively, to maintain your specified 20px displacement with transform: */
+ 
+ /* Specific space from main content block above */
+ margin-top: 100px; /* Adjust this value for separation */
+
+ /* Add some clear breathing room at the bottom of the hero div */
+ margin-bottom: 50px;
+
+ /* Retaining your specified transition properties and styles: */
+ padding: 12px 30px;
+ background: linear-gradient(45deg, #00d9ff, #a86af9);
+ color: #fff;
+ font-weight: 600;
+ border: none;
+ border-radius: 30px;
+ cursor: pointer;
+ transition: 0.3s;
+ transform: translateY(20px); /* Keeps your 20px displacement */
 }
 
 
@@ -108,7 +136,9 @@
   border-radius: 30px;
   cursor: pointer;
   transition: 0.3s;
- }
+  /* Added to move the button down */
+  transform: translateY(20px); 
+}
 
 .explore-btn:hover {
   transform: scale(1.05);

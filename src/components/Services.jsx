@@ -1,25 +1,25 @@
 import React from "react";
 import "../components/Services.css";
 
-import designImg from "../assets/design.jpg";
-import webImg from "../assets/webdev.jpg";
-import cloudImg from "../assets/cloud.jpg";
+import designImg from "../assets/design-detail.png";
+import webImg from "../assets/projdev-detail.png";
+import cloudImg from "../assets/cloud-detail.png";
 
 const Services = () => {
   
   const services = [
     {
-      title: "Testing & DevOps",
+      title: "Application Development and Testing",
       img: designImg,
       targetId: "ui-design",
     },
     {
-      title: "Web Development",
+      title: "Project Management",
       img: webImg,
       targetId: "web-dev",
     },
     {
-      title: "Cloud Migratin & Integration",
+      title: "IT Infracture Support and Services",
       img: cloudImg,
       targetId: "cloud",
     },
