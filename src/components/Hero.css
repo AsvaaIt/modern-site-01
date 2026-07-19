@@ -1,15 +1,19 @@
+
+
 .hero {
   position: relative;
-  width:100%;
-  height: 60vh;
-  background: url("/hero-bg.jpg") center/cover no-repeat;
+  width: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
   display: flex;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  color: #fff;
-  
+  align-items: center;
+  overflow: hidden;
 }
+
 
 
 
@@ -104,8 +108,7 @@
   border-radius: 30px;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: 650px;
-}
+ }
 
 .explore-btn:hover {
   transform: scale(1.05);
@@ -118,3 +121,55 @@
 html {
   scroll-behavior: smooth;
 }   
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .hero {
+    width: 100%;
+    max-width: 100vw;
+    min-height: 100vh;
+    padding: 80px 20px 40px;
+    background-position: center;
+    background-size: cover;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.2;
+    word-wrap: break-word;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .hero-bg {
+    display: none;
+  }
+
+  .explore-btn {
+    margin-top: 30px;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}

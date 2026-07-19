@@ -23,7 +23,7 @@ export default function Contact() {
 
     try {
       const response = await fetch(
-                         "/contact",
+                         "/api/contact",
         {
           method: "POST",
           headers: {

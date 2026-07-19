@@ -68,3 +68,25 @@
 html {
   scroll-behavior: smooth;
 }
+@media (max-width:768px){
+
+.services{
+    padding:60px 20px;
+}
+
+.section-title{
+    font-size:1.8rem;
+}
+
+.service-grid{
+    gap:25px;
+}
+
+.service-card{
+    width:100%;
+}
+
+.service-img{
+    height:200px;
+}
+}

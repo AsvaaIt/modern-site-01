@@ -38,3 +38,18 @@ html {
   50% { transform: translateY(-8px); }
   100% { transform: translateY(0px); }
 }
+
+@media (max-width:768px){
+
+.about{
+    padding:60px 20px;
+}
+
+.about h2{
+    font-size:1.8rem;
+}
+
+.about p{
+    font-size:1rem;
+}
+}

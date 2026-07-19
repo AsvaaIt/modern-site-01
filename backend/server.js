@@ -17,18 +17,33 @@ console.log("ENV CHECK");
 console.log("EMAIL_USER:", process.env.EMAIL_USER);
 console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
 console.log("EMAIL_TO:", process.env.EMAIL_TO);
+
 // =======================
 // Email Configuration
 // =======================
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
-  secure: false,
+  secure: false, // false for Port 587
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  authMethod: 'LOGIN',
   tls: {
     rejectUnauthorized: false
   }
 });
 
+// Test the connection immediately on startup
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("❌ SMTP Connection Failed:");
+    console.log(error.message);
+  } else {
+    console.log("✅ SMTP Server is ready to take our messages");
+  }
+});
 
 const app = express();
 console.log("✅ THIS IS MY SERVER.JS");
@@ -47,6 +62,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
+
 // =======================
 // Socket.IO
 // =======================
@@ -142,13 +158,9 @@ app.use(async (req, res, next) => {
 });
 
 // =======================
-// Contact Form (NO SMTP)
-// =======================
-// =======================
 // Contact Form + Email
 // =======================
-app.post("/contact", async (req, res) => {
-
+app.post("/api/contact", async (req, res) => {
   console.log("Contact request received:", req.body);
 
   try {
@@ -171,100 +183,62 @@ app.post("/contact", async (req, res) => {
           });
         }
 
-await transporter.sendMail({
-  from: process.env.EMAIL_FROM,
-  to: process.env.EMAIL_TO,
-  replyTo: email,
-  subject: "New Contact Form Submission",
-  html: `
-    <h2>New Contact Request</h2>
-    <p><b>Name:</b> ${name}</p>
-    <p><b>Email:</b> ${email}</p>
-    <p><b>Message:</b> ${message}</p>
-  `,
-});
-
-
-
-
         try {
-
-
-
-          // Send email to Admin
+          // 1. Send email to Admin
           await transporter.sendMail({
-           from: process.env.EMAIL_FROM,
-  to: process.env.EMAIL_TO,
-  replyTo: email,
-  subject: "New Contact Form Submission",
-  html: `
+            from: process.env.EMAIL_FROM,
+            to: process.env.EMAIL_TO,
+            replyTo: email,
+            subject: "New Contact Form Submission",
+            html: `
               <h2>New Contact Form Submission</h2>
-
               <p><strong>Name:</strong> ${name}</p>
-
               <p><strong>Email:</strong> ${email}</p>
-
               <p><strong>Message:</strong></p>
-
               <p>${message}</p>
-
               <hr>
-
               <p>Submitted on ${new Date().toLocaleString()}</p>
             `,
           });
 
-          // Auto Reply
+          // 2. Auto Reply to Customer
           await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+            from: process.env.EMAIL_FROM,
             to: email,
             subject: "Thank you for contacting Asvaa IT",
             html: `
               <h2>Hello ${name},</h2>
-
               <p>Thank you for contacting <strong>Asvaa IT</strong>.</p>
-
               <p>We have received your message successfully.</p>
-
               <p>Our team will contact you shortly.</p>
-
               <br>
-
               <p>Regards,</p>
-
               <strong>Asvaa IT Team</strong>
             `,
           });
 
-          res.json({
+          return res.json({
             success: true,
             message: "Message sent successfully.",
           });
 
         } catch (mailError) {
-
           console.error("Email Error:", mailError);
-
-          res.status(500).json({
+          return res.status(500).json({
             success: false,
-            message:
-              "Message saved successfully, but email could not be sent.",
+            message: "Message saved successfully, but email could not be sent.",
           });
         }
       }
     );
 
   } catch (err) {
-
     console.error("Contact error:", err);
-
-    res.status(500).json({
+    return res.status(500).json({
       error: "Server error",
     });
-
   }
 });
-
 
 // =======================
 // Get Contact Messages
@@ -278,7 +252,6 @@ app.get("/api/messages", (req, res) => {
         console.error("Fetch messages error:", err);
         return res.status(500).json({ error: "Failed to fetch messages" });
       }
-
       res.json(rows);
     }
   );
@@ -296,11 +269,11 @@ app.get("/api/visitors", (req, res) => {
         console.error("Fetch visitors error:", err);
         return res.status(500).json({ error: "Failed to fetch visitors" });
       }
-
       res.json(rows);
     }
   );
 });
+
 app.get("/test", (req, res) => {
   console.log("Test route called");
   res.json({
@@ -308,6 +281,7 @@ app.get("/test", (req, res) => {
     message: "Server is alive",
   });
 });
+
 // =======================
 // Static Frontend
 // =======================
