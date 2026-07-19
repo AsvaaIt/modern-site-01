@@ -47,7 +47,7 @@ function App() {
       />
       <ServiceDetail
         id="cloud"
-        title="IT Infracture Support and Services"
+        title="IT infrastructure Support and Services"
         description="At ASVAA IT, we maximize your hardware investments and ensure continuous uptime with our comprehensive IT infrastructure services, designed to provide a resilient and secure digital foundation for your business. We specialize in advanced virtualization and server management, handling everything from dynamic resource allocation to seamless, zero-disruption upgrades for complex multi-node clusters. To keep your operations online, we engineer high-availability architectures with strategic failover protocols and automated disaster recovery plans that safeguard your data against hardware failures and cyber threats. Beneath the application layer, our 24/7 proactive monitoring and enterprise-grade security protocols—including advanced firewalls and network isolation—protect your digital assets around the clock. Whether your environment is on-premises, fully cloud-based, or hybrid, we manage seamless migrations and load balancing to guarantee peak performance. All of this is backed by our proactive IT helpdesk, which operates as an extension of your team to provide rapid troubleshooting, automated patching, and continuous maintenance, resolving bottlenecks behind the scenes for a completely frictionless end-user experience..."
         img={cloudDetail}
       />
