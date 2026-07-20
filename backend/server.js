@@ -17,6 +17,7 @@ console.log("ENV CHECK");
 console.log("EMAIL_USER:", process.env.EMAIL_USER);
 console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
 console.log("EMAIL_TO:", process.env.EMAIL_TO);
+console.log("SAMBANOVA_KEY:", process.env.SAMBANOVA_API_KEY ? "Loaded" : "Missing"); // AI Key Check
 
 // =======================
 // Email Configuration
@@ -101,10 +102,10 @@ CREATE TABLE IF NOT EXISTS contacts (
   name TEXT NOT NULL,
   email TEXT NOT NULL,
   message TEXT NOT NULL,
+  assigned_to TEXT DEFAULT 'Unassigned', 
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 `);
-
 // =======================
 // Visitor Tracking Middleware
 // =======================
@@ -241,6 +242,65 @@ app.post("/api/contact", async (req, res) => {
 });
 
 // =======================
+// AI Chatbot Endpoint (SambaNova)
+// =======================
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
+    }
+
+    // Call the SambaNova Cloud API
+    const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.SAMBANOVA_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "Meta-Llama-3.3-70B-Instruct", 
+        temperature: 0.7,
+        messages: [
+          {
+            role: "system",
+            content: "You are the official AI Assistant for Asvaa IT Solutions."
+          },
+          {
+            role: "user",
+            content: message
+          }
+        ]
+      })
+    });
+
+    // Read the raw text BEFORE trying to parse it as JSON
+    const rawText = await response.text();
+
+    if (!response.ok) {
+      console.error("❌ SambaNova Error! Status:", response.status);
+      console.error("Exact Message from SambaNova:", rawText);
+      return res.status(500).json({ error: "AI provider error" });
+    }
+
+    try {
+      // Safely parse the text now that we know it is a successful response
+      const data = JSON.parse(rawText);
+      const aiReply = data.choices[0].message.content;
+      res.json({ reply: aiReply });
+    } catch (parseError) {
+      console.error("❌ JSON Parse Error. SambaNova sent:", rawText);
+      res.status(500).json({ error: "AI parsing error" });
+    }
+
+  } catch (err) {
+    console.error("❌ Chat Network error:", err);
+    res.status(500).json({ error: "AI Server error" });
+  }
+});
+
+// =======================
 // Get Contact Messages
 // =======================
 app.get("/api/messages", (req, res) => {
@@ -256,7 +316,34 @@ app.get("/api/messages", (req, res) => {
     }
   );
 });
+// =======================
+// Update Assigned Lead
+// =======================
+app.patch("/api/messages/:id/assign", (req, res) => {
+  const { id } = req.params;
+  const { lead } = req.body;
+  
+  db.run(
+    "UPDATE contacts SET assigned_to = ? WHERE id = ?",
+    [lead, id],
+    function (err) {
+      if (err) return res.status(500).json({ error: "Failed to assign lead" });
+      res.json({ success: true, message: "Lead assigned successfully" });
+    }
+  );
+});
 
+// =======================
+// Delete a Message
+// =======================
+app.delete("/api/messages/:id", (req, res) => {
+  const { id } = req.params;
+  
+  db.run("DELETE FROM contacts WHERE id = ?", [id], function (err) {
+    if (err) return res.status(500).json({ error: "Failed to delete message" });
+    res.json({ success: true, message: "Message deleted" });
+  });
+});
 // =======================
 // Get Visitors
 // =======================

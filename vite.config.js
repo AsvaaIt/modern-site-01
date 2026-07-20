@@ -11,8 +11,16 @@ export default defineConfig({
     },
   },
   server: {
-     host: true,
+    host: true,
     port: 5173,
     open: true,
+    proxy: {
+      // Forwards all /api requests to your backend
+      "/api": {
+        target: "http://localhost:3000", // <-- CHANGE THIS to your backend's actual port
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });
