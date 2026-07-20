@@ -95,19 +95,49 @@ CREATE TABLE IF NOT EXISTS visitors (
 );
 `);
 
-// Contacts table (Contact Us messages)
+// Contacts table (UPDATED schema with BANT and Status)
 db.exec(`
 CREATE TABLE IF NOT EXISTS contacts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   email TEXT NOT NULL,
   message TEXT NOT NULL,
-  assigned_to TEXT DEFAULT 'Unassigned', 
+  assigned_to TEXT DEFAULT 'Unassigned',
+  status TEXT DEFAULT 'New',
+  budget TEXT DEFAULT '',
+  authority TEXT DEFAULT '',
+  need TEXT DEFAULT '',
+  timeline TEXT DEFAULT '',
+  notes TEXT DEFAULT '',
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 `);
 
-// 1. ADDED: Users table (For Admin / Agent portal access)
+// AUTO-MIGRATION: Safely add new columns to existing contacts table if they are missing
+const newColumns = [
+  { name: 'status', def: "'New'" },
+  { name: 'budget', def: "''" },
+  { name: 'authority', def: "''" },
+  { name: 'need', def: "''" },
+  { name: 'timeline', def: "''" },
+  { name: 'notes', def: "''" }
+];
+
+db.all("PRAGMA table_info(contacts)", (err, columns) => {
+  if (!err && columns) {
+    const existingColNames = columns.map(c => c.name);
+    newColumns.forEach(col => {
+      if (!existingColNames.includes(col.name)) {
+        db.run(`ALTER TABLE contacts ADD COLUMN ${col.name} TEXT DEFAULT ${col.def}`, (alterErr) => {
+          if (alterErr) console.error(`Error adding ${col.name}:`, alterErr);
+          else console.log(`✅ Database Migration: Added missing column '${col.name}' to contacts table`);
+        });
+      }
+    });
+  }
+});
+
+// Users table (For Admin / Agent portal access)
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -180,7 +210,7 @@ app.use(async (req, res, next) => {
 });
 
 // =======================
-// Portal Login API (ADDED)
+// Portal Login API 
 // =======================
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
@@ -366,7 +396,7 @@ app.get("/api/messages", (req, res) => {
 });
 
 // =======================
-// Update Assigned Lead & Email (UPDATED)
+// Update Assigned Lead & Email 
 // =======================
 const TEAM_EMAILS = {
   "Manohar Arsid": "info@asvaa-it.in", // <-- UPDATE THESE TO REAL EMAILS
@@ -402,7 +432,7 @@ app.patch("/api/messages/:id/assign", (req, res) => {
         if (targetEmail) {
           try {
             await transporter.sendMail({
-              from: process.env.EMAIL_FROM, // Using your env setup
+              from: process.env.EMAIL_FROM, 
               to: targetEmail,
               subject: `New Lead Assigned: ${contact.name}`,
               html: `
@@ -425,6 +455,48 @@ app.patch("/api/messages/:id/assign", (req, res) => {
 
         res.json({ success: true, message: "Lead assigned and email sent" });
       });
+    }
+  );
+});
+
+// =======================
+// (ADDED) Update Lead Status Only
+// =======================
+app.patch("/api/messages/:id/status", (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  db.run(
+    "UPDATE contacts SET status = ? WHERE id = ?",
+    [status, id],
+    function (err) {
+      if (err) {
+        console.error("Status update error:", err);
+        return res.status(500).json({ error: "Failed to update status" });
+      }
+      res.json({ success: true, status });
+    }
+  );
+});
+
+// =======================
+// (ADDED) Update Full Lead Profile (BANT + Notes)
+// =======================
+app.patch("/api/messages/:id/profile", (req, res) => {
+  const { id } = req.params;
+  const { status, budget, authority, need, timeline, notes } = req.body;
+
+  db.run(
+    `UPDATE contacts 
+     SET status = ?, budget = ?, authority = ?, need = ?, timeline = ?, notes = ? 
+     WHERE id = ?`,
+    [status, budget, authority, need, timeline, notes, id],
+    function (err) {
+      if (err) {
+        console.error("Profile update error:", err);
+        return res.status(500).json({ error: "Failed to update profile" });
+      }
+      res.json({ success: true, message: "Profile updated successfully" });
     }
   );
 });
