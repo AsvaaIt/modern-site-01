@@ -106,6 +106,27 @@ CREATE TABLE IF NOT EXISTS contacts (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 `);
+
+// 1. ADDED: Users table (For Admin / Agent portal access)
+db.exec(`
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL, 
+  role TEXT NOT NULL
+);
+`);
+
+// Auto-seed default users if table is empty (for testing)
+db.get("SELECT count(*) as count FROM users", (err, row) => {
+  if (row && row.count === 0) {
+    db.run(`INSERT INTO users (username, password, role) VALUES ('admin', 'admin123', 'admin')`);
+    db.run(`INSERT INTO users (username, password, role) VALUES ('Manohar', 'agent123', 'agent')`);
+    db.run(`INSERT INTO users (username, password, role) VALUES ('Narayan', 'agent123', 'agent')`);
+    console.log("✅ Seeded default Admin and Agent users into database");
+  }
+});
+
 // =======================
 // Visitor Tracking Middleware
 // =======================
@@ -156,6 +177,36 @@ app.use(async (req, res, next) => {
   }
 
   next();
+});
+
+// =======================
+// Portal Login API (ADDED)
+// =======================
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+
+  db.get(
+    "SELECT id, username, role FROM users WHERE username = ? AND password = ?", 
+    [username, password], 
+    (err, user) => {
+      if (err) {
+        console.error("Login DB error:", err);
+        return res.status(500).json({ error: "Server error" });
+      }
+      if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      res.json({
+        success: true,
+        user: {
+          id: user.id,
+          name: user.username,
+          role: user.role
+        }
+      });
+    }
+  );
 });
 
 // =======================
@@ -252,7 +303,6 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Call the SambaNova Cloud API
     const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -275,7 +325,6 @@ app.post("/api/chat", async (req, res) => {
       })
     });
 
-    // Read the raw text BEFORE trying to parse it as JSON
     const rawText = await response.text();
 
     if (!response.ok) {
@@ -285,7 +334,6 @@ app.post("/api/chat", async (req, res) => {
     }
 
     try {
-      // Safely parse the text now that we know it is a successful response
       const data = JSON.parse(rawText);
       const aiReply = data.choices[0].message.content;
       res.json({ reply: aiReply });
@@ -316,19 +364,67 @@ app.get("/api/messages", (req, res) => {
     }
   );
 });
+
 // =======================
-// Update Assigned Lead
+// Update Assigned Lead & Email (UPDATED)
 // =======================
+const TEAM_EMAILS = {
+  "Manohar Arsid": "info@asvaa-it.in", // <-- UPDATE THESE TO REAL EMAILS
+  "Laxmi Narayan Arsid": "info@asvaa-it.in" // <-- UPDATE THESE TO REAL EMAILS
+};
+
 app.patch("/api/messages/:id/assign", (req, res) => {
   const { id } = req.params;
   const { lead } = req.body;
   
+  // 1. Update the database
   db.run(
     "UPDATE contacts SET assigned_to = ? WHERE id = ?",
     [lead, id],
     function (err) {
       if (err) return res.status(500).json({ error: "Failed to assign lead" });
-      res.json({ success: true, message: "Lead assigned successfully" });
+
+      // If just changing back to Unassigned, we don't need to email anyone
+      if (lead === "Unassigned") {
+        return res.json({ success: true, message: "Lead unassigned successfully" });
+      }
+
+      // 2. Fetch the newly assigned lead's details to include in the email
+      db.get("SELECT * FROM contacts WHERE id = ?", [id], async (fetchErr, contact) => {
+        if (fetchErr || !contact) {
+          console.error("Could not fetch contact details for email.");
+          return res.json({ success: true, message: "Assigned, but email failed." });
+        }
+
+        // 3. Send the email to the assigned team member
+        const targetEmail = TEAM_EMAILS[lead];
+        
+        if (targetEmail) {
+          try {
+            await transporter.sendMail({
+              from: process.env.EMAIL_FROM, // Using your env setup
+              to: targetEmail,
+              subject: `New Lead Assigned: ${contact.name}`,
+              html: `
+                <h2>You have been assigned a new lead!</h2>
+                <p><strong>Name:</strong> ${contact.name}</p>
+                <p><strong>Email:</strong> ${contact.email}</p>
+                <p><strong>Message:</strong></p>
+                <blockquote style="background: #f9f9f9; padding: 10px; border-left: 4px solid #ccc;">
+                  ${contact.message}
+                </blockquote>
+                <br>
+                <p>Please log in to the portal to manage this lead.</p>
+              `
+            });
+            console.log(`✅ Assignment email sent to ${lead} at ${targetEmail}`);
+          } catch (emailErr) {
+            console.error("❌ Failed to send assignment email:", emailErr);
+          }
+        }
+
+        res.json({ success: true, message: "Lead assigned and email sent" });
+      });
     }
   );
 });
@@ -344,6 +440,7 @@ app.delete("/api/messages/:id", (req, res) => {
     res.json({ success: true, message: "Message deleted" });
   });
 });
+
 // =======================
 // Get Visitors
 // =======================
