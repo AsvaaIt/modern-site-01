@@ -1,0 +1,243 @@
+/* lead-profile.css - Full-Screen Flexbox Aesthetic */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85); /* Deep dark background */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999; /* Ensures it sits on top of everything */
+  
+  /* PERFECT CENTERING */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-card {
+  position: relative;
+  margin: auto;
+  
+  /* FORCE ALMOST FULL SCREEN (Prevents the half-cut issue) */
+  width: 95vw;
+  max-width: 1200px;
+  height: 95vh;
+  max-height: 95vh;
+  
+  background: rgba(15, 23, 42, 0.98); /* Solid dark slate */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 40px;
+  
+  /* Critical for keeping padding inside the bounds so it doesn't get cut off */
+  box-sizing: border-box; 
+  
+  /* Enables internal scrolling for the form */
+  overflow-y: auto; 
+  
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #f8fafc;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.modal-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.75rem;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); /* Cyan glow */
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0 10px;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: #ef4444; /* Red on hover */
+}
+
+.form-layout {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.form-column {
+  flex: 1 1 350px; /* Allows columns to be flexible but stay wide */
+}
+
+.section-title {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+  color: #38bdf8; /* Cyan accent */
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.info-text {
+  margin: 10px 0;
+  color: #cbd5e1;
+  font-size: 1rem;
+}
+
+.info-link {
+  color: #38bdf8;
+  text-decoration: none;
+  transition: text-shadow 0.2s;
+}
+
+.info-link:hover {
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}
+
+.message-box {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.input-group {
+  margin-bottom: 18px;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8fafc;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.form-input option {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.form-textarea {
+  min-height: 150px; /* Made slightly taller for notes */
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-cancel {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-save {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+}
+
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Custom scrollbar for the modal card */
+.modal-card::-webkit-scrollbar {
+  width: 10px;
+}
+.modal-card::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+.modal-card::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+.modal-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

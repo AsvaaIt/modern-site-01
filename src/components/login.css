@@ -1,0 +1,135 @@
+/* login.css - Modern AI Interface Aesthetic */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* Deep space gradient background */
+  background: radial-gradient(circle at top left, #1e1b4b, #020617);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  position: relative;
+  margin: 0;
+}
+
+/* Subtle glowing orb in the background */
+.login-container::before {
+  content: '';
+  position: absolute;
+  width: 50vw;
+  height: 50vw;
+  background: rgba(56, 189, 248, 0.15);
+  border-radius: 50%;
+  filter: blur(100px);
+  top: -20%;
+  left: -10%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.login-card {
+  /* Glassmorphism effect */
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
+  width: 100%;
+  max-width: 400px;
+  z-index: 1;
+  animation: formFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #ffffff;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  /* Subtle neon text glow */
+  text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+}
+
+.login-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  font-size: 0.9rem;
+  text-align: center;
+  animation: shake 0.4s ease-in-out;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.login-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.login-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #38bdf8;
+  /* Cyan glow on focus */
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+}
+
+.login-button {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+.login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
+}
+
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Animations */
+@keyframes formFadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}

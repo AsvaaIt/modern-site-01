@@ -1,0 +1,180 @@
+/* portal.css - Dark AI / Glassmorphism Dashboard */
+
+.portal-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: radial-gradient(circle at top left, #1e1b4b, #020617);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #f8fafc;
+}
+
+.portal-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
+  padding: 30px;
+}
+
+/* Header */
+.portal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.portal-title {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.portal-user-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.portal-user-controls p {
+  margin: 0;
+  color: #94a3b8;
+}
+
+.portal-user-controls strong {
+  color: #38bdf8;
+}
+
+/* Table */
+.portal-table-container {
+  overflow-x: auto;
+}
+
+.portal-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.portal-table th {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #38bdf8;
+  padding: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.portal-table td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  vertical-align: middle;
+}
+
+.portal-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.email-link {
+  color: #38bdf8;
+  text-decoration: none;
+  transition: text-shadow 0.2s;
+}
+
+.email-link:hover {
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}
+
+.message-cell {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #94a3b8;
+}
+
+/* Select Dropdowns */
+.portal-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8fafc;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.portal-select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.portal-select option {
+  background: #0f172a;
+  color: #fff;
+}
+
+/* Buttons */
+.action-cell {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-logout {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+}
+
+.status-message {
+  text-align: center;
+  padding: 40px;
+  color: #94a3b8;
+  font-size: 1.1rem;
+}
