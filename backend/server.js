@@ -333,6 +333,34 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
+    // 1. ADD YOUR WEBSITE TEXT HERE
+    // Copy and paste the text from your website's pages here.
+    const websiteData = `
+      Welcome to Asvaa IT Services & Solutions.
+      Services: 
+      - Custom Web & Mobile application Development 
+      - AI Chatbot Integration
+      - IT infrastructure Support and Services
+      Contact: info@asvaa-it-in
+      Business Hours: 9 AM to 6 PM IST, Monday - Friday.
+      (At ASVAA IT Solutions, we deliver next-generation technology services that empower businesses to scale with confidence. Our core expertise spans application and product development, comprehensive software testing, robust IT infrastructure, and cutting-edge Artificial Intelligence (AI) integration. We help enterprises build intelligent, future-ready applications by embedding modern AI capabilities—from predictive analytics to generative AI models—directly into their digital ecosystems. By leveraging advanced DevOps practices, including AI-driven automation and continuous integration and deployment (CI/CD), we ensure faster release cycles and rock-solid environments. From initial architecture design through deployment and ongoing optimization, our solutions are engineered for maximum scalability, performance, and cost-efficiency. Driven by a commitment to innovation and client success, ASVAA IT Solutions transforms complex IT operations into a smart, secure digital foundation...)
+    `;
+
+    // 2. CREATE STRICT RULES
+    // This forces the AI to act like a closed-book test.
+    const strictSystemPrompt = `
+      You are the official AI Assistant for Asvaa IT Services & Solutions.
+      
+      CRITICAL RULES:
+      1. You must ONLY answer questions using the "Website Data" provided below.
+      2. If a user asks about anything not mentioned in the Website Data, you must reply: "I'm sorry, but I only have information regarding Asvaa IT Services & Solutions. Please contact our support team for more details."
+      3. Do NOT use outside knowledge, general internet knowledge, or make up information.
+      4. Do not mention that you are reading from "Website Data".
+      
+      Website Data:
+      ${websiteData}
+    `;
+
     const response = await fetch("https://api.sambanova.ai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -341,11 +369,11 @@ app.post("/api/chat", async (req, res) => {
       },
       body: JSON.stringify({
         model: "Meta-Llama-3.3-70B-Instruct", 
-        temperature: 0.7,
+        temperature: 0.1, // Keeps the AI factual and literal
         messages: [
           {
             role: "system",
-            content: "You are the official AI Assistant for Asvaa IT Solutions."
+            content: strictSystemPrompt // Updated to use the strict rules and data
           },
           {
             role: "user",
